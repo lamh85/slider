@@ -1,4 +1,6 @@
-var rgbArray = [0, 0, 0];
+// States -------------------------------
+
+var rgbArray = [255, 255, 255];
 
 var rgbArrayIndex = {
   red:    0,
@@ -7,6 +9,14 @@ var rgbArrayIndex = {
 }
 
 var containerElement = document.querySelector(".container")
+
+var rgbCodeElement = document.querySelector(".rgb-code")
+
+// Functions ---------------------------
+
+var renderRgbCode = function() {
+  rgbCodeElement.innerHTML = rgbArray.join(", ")
+}
 
 var styleValueBuilder = function () {
   return "rgb(" + rgbArray.join(",") + ")";
@@ -20,23 +30,34 @@ var styleUpdater = function () {
 var rgbUpdater = function(dimension, value) {
   var index = rgbArrayIndex[dimension];
   rgbArray[index] = value;
-  console.log(rgbArray);
 }
 
 // Controller --------------------------------
 
 var controller = function(dimension, value) {
-  rgbUpdater("red", value);
-  styleUpdater()
+  rgbUpdater(dimension, value);
+  styleUpdater();
+  renderRgbCode();
 }
 
 // Event Handling ----------------------------
 
-var sliderRed = document.querySelector(".slider.red");
-
 var listener = function(event) {
   var value = event.target.value;
-  controller("red", value);
+  var dimension = event.target.dataset.color;
+  controller(dimension, value);
 }
 
-sliderRed.addEventListener("input", listener);
+var sliders = document.querySelectorAll(".slider");
+
+sliders.forEach(function(element) {
+  element.addEventListener("input", listener);
+})
+
+// Initialize --------------------------------
+
+var initializer = function() {
+  renderRgbCode();
+}
+
+initializer();
